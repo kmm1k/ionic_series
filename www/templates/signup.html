@@ -1,0 +1,21 @@
+<ion-view title="Signup">
+    <ion-content ng-controller="signupCtrl" overflow-scroll="true" padding="true" scroll="false" class="has-header">
+        <form class="list" ng-submit="signUp()">
+            <ion-list>
+                <label class="item item-input">
+                    <span class="input-label">username</span>
+                    <input ng-model="postData.username" name="username" type="text" placeholder="">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Email</span>
+                    <input ng-model="postData.email" name="email" type="email" placeholder="">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Password</span>
+                    <input ng-model="postData.password" name="password" type="password" placeholder="">
+                </label>
+            </ion-list>
+            <button type="submit" class="button button-positive button-block ">Sign up</button>
+        </form>
+    </ion-content>
+</ion-view>

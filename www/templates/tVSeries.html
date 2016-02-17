@@ -1,0 +1,19 @@
+<ion-view title="TV series">
+    <ion-content ng-controller="tVSeriesCtrl" overflow-scroll="true" padding="true" scroll="true" class="has-header">
+        <form class="list">
+            <label class="item item-input" name="search for tv series">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input ng-keypress="searchForMovies()" ng-model="searchData.name" type="search" placeholder="Search for tv series">
+            </label>
+        </form>
+      <button ng-click="logOut()" class="button button-negative button-block ">Log out</button>
+
+      <ion-list >
+            <ion-item ng-repeat="show in tvShows" class="item-thumbnail-left" href="#/single/{{show.id}}">
+                <img src="https://image.tmdb.org/t/p/w92{{show.poster_path}}">
+                <h2>{{show.name}}</h2>
+                <p>{{show.overview}}</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

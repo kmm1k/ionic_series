@@ -1,0 +1,14 @@
+<ion-view title="Single subscribed">
+    <ion-content ng-controller="singleSubscribedCtrl" overflow-scroll="true" padding="true" scroll="true" class="has-header">
+        <h1>{{show.title}}</h1>
+        <div ng-repeat="season in show.seasons" class="list card" ng-init="outerIndex = $index">
+            <div class="item item-divider">Season {{outerIndex+1}}</div>
+            <div class="item item-body">
+                <ion-list >
+                    <ion-toggle   ng-repeat="episode in season" ng-model="episode.watched" ng-init="innerIndex = $index" ng-click="watched(innerIndex, outerIndex)" toggle-class="toggle-positive">Episode {{innerIndex+1}}</ion-toggle>
+                </ion-list>
+            </div>
+        </div>
+
+    </ion-content>
+</ion-view>
