@@ -6,13 +6,14 @@
                 <input type="search" placeholder="Search for tv series">
             </label>
         </form>
-        <ion-list >
-            <ion-item ng-repeat="show in series" class="item-thumbnail-left" href="#/subscribed/{{show.showId}}">
-                <img>
-                <h2>{{show.title}}</h2>
-                <p></p>
-            </ion-item>
 
-        </ion-list>
+
+      <ul class="list">
+        <a ng-repeat="show in series" href="#/subscribed/{{show.showId}}" class="item item-thumbnail-left" nav-clear menu-close >
+          <img src="https://image.tmdb.org/t/p/w92{{show.posterPath}}">
+          <h2>{{show.title}}</h2>
+          <p>{{show.overview}}</p>
+        </a>
+      </ul>
     </ion-content>
 </ion-view>

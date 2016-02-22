@@ -112,7 +112,16 @@ angular.module('app.services', [])
           console.log(postObject);
           postDataToServer.post(postObject, $timeout, $rootScope, $location);
         });
+      },
+    checkIfSubscribed: function (showId) {
+      var series = this.getSeriesFromSession();
+      for (var i = 0; i < series.length; i++) {
+        if (series[i].showId == showId)
+          return true;
       }
+      return false;
+    }
+
     }
 
   }

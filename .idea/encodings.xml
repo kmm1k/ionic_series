@@ -5,7 +5,11 @@
     <file url="file://$PROJECT_DIR$/www/js/routes.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/www/js/services.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/www/templates/login.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/myTVSeries.html" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/www/templates/signup.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/singlePage.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/singleSubscribed.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/templates/tVSeries.html" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/www/templates/tabsController.html" charset="UTF-8" />
   </component>
 </project>

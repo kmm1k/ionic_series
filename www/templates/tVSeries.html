@@ -8,12 +8,14 @@
         </form>
       <button ng-click="logOut()" class="button button-negative button-block ">Log out</button>
 
-      <ion-list >
-            <ion-item ng-repeat="show in tvShows" class="item-thumbnail-left" href="#/single/{{show.id}}">
-                <img src="https://image.tmdb.org/t/p/w92{{show.poster_path}}">
-                <h2>{{show.name}}</h2>
-                <p>{{show.overview}}</p>
-            </ion-item>
-        </ion-list>
+
+        <ul class="list">
+          <a ng-repeat="show in tvShows" href="#/single/{{show.id}}" class="item item-thumbnail-left" nav-clear menu-close >
+            <img src="https://image.tmdb.org/t/p/w92{{show.poster_path}}">
+            <h2>{{show.name}}</h2>
+            <p>{{show.overview}}</p>
+          </a>
+        </ul>
+
     </ion-content>
 </ion-view>

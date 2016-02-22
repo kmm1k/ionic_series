@@ -1,16 +1,46 @@
+<style>
+  .videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+  }
+  .videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
 <ion-view title="Single page">
-    <ion-content ng-controller="singlePageCtrl" overflow-scroll="true" padding="true" scroll="true" class="has-header">
-        <div ng-show="loaded"  style=" border: 1px solid rgb(238, 238, 238); border-radius: 3px; text-align: center; background-color: rgb(255, 255, 255);">
-            <img ng-if="!hasVideos()" src="https://image.tmdb.org/t/p/w500{{showInfo.backdrop_path}}" width="100%">
-          <iframe ng-if="hasVideos()" width="360" height="240" ng-src="{{trustSrc(movie.src)}}" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <h1>{{showInfo.name}}</h1>
-        <div>
-            <p>{{showInfo.overview}}</p>
-            <p><strong>First Air date: </strong>{{showInfo.first_air_date}}</p>
-        </div>
+  <ion-content ng-controller="singlePageCtrl" overflow-scroll="true" padding="true" scroll="true" class="has-header">
+    <div ng-show="loaded"
+         style=" border: 1px solid rgb(238, 238, 238); border-radius: 3px; text-align: center; background-color: rgb(255, 255, 255);">
 
-        <button ng-hide="checkIfSubscribed(showInfo.id)" ng-click="subscribe()" class="button button-stable button-block ">Subscribe!</button>
-        <button ng-show="checkIfSubscribed(showInfo.id)" ng-click="unSubscribe(showInfo.id)" class="button button-stable button-block ">Unsubscribe!</button>
-    </ion-content>
+      <img ng-if="!hasVideos()" src="https://image.tmdb.org/t/p/w500{{showInfo.backdrop_path}}" width="100%">
+
+      <div class="videoWrapper">
+        <iframe ng-if="hasVideos()" width="560" height="349" ng-src="{{trustSrc(movie.src)}}" frameborder="0"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+    <h1>{{showInfo.name}}</h1>
+
+    <div>
+      <p>{{showInfo.overview}}</p>
+
+      <p><strong>First Air date: </strong>{{showInfo.first_air_date}}</p>
+    </div>
+
+    <button ng-hide="seriesService.checkIfSubscribed(showInfo.id)" ng-click="subscribe()"
+            class="button button-stable button-block ">Subscribe!
+    </button>
+    <button ng-show="seriesService.checkIfSubscribed(showInfo.id)" ng-click="unSubscribe(showInfo.id)"
+            class="button button-stable button-block ">Unsubscribe!
+    </button>
+    <a ng-show="seriesService.checkIfSubscribed(showInfo.id)" href="#/subscribed/{{showInfo.id}}"
+            class="button button-stable button-block button-positive ">Go to episode view.
+    </a>
+  </ion-content>
 </ion-view>
