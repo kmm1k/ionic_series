@@ -16,9 +16,6 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
 
   .controller('loginCtrl', function ($scope, PostLogin, $ionicPopup, $localStorage, postDataToServer,
                                      $location, $timeout, $rootScope) {
-
-    var online = navigator.onLine;
-    console.log(online)
     // Our form data for creating a new post with ng-model
     $scope.postData = {};
     $scope.logIn = function () {
@@ -27,6 +24,8 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
         postDataToServer.post(postObject, $timeout, $rootScope, $location);
       });
     };
+
+
   })
 
 
@@ -64,21 +63,20 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
     };
     $scope.searchDefault();
 
-    $scope.logOut = function() {
-      seriesService.removeSession();
-      seriesService.redirect('login')
+    $scope.logOut = function () {
+      sessionStorage.removeSession();
+      sessionStorage.redirect('login')
     }
 
   })
 
-  .controller('myTVSeriesCtrl', function ($scope, seriesService) {
+  .controller('myTVSeriesCtrl', function ($scope, seriesService, sessionStorage) {
     $scope.series = seriesService.getSeriesFromSession();
-    console.log($scope.series)
-    $scope.logOut = function() {
-      seriesService.removeSession();
-      seriesService.redirect('login')
+    $scope.logOut = function () {
+      sessionStorage.removeSession();
+      sessionStorage.redirect('login')
     }
-})
+  })
 
   .controller('singlePageCtrl', function ($scope, $http, $stateParams, sessionStorage, postDataToServer,
                                           PostSubscribe, $sce, errorAlerts, $localStorage, PostUnSubscribe, seriesService) {
@@ -145,7 +143,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
       }
     };
 
-    $scope.unSubscribe = function(showId) {
+    $scope.unSubscribe = function (showId) {
       var dataToSend = {};
       if ($scope.showInfo.seasons != undefined) {
         dataToSend.showId = $scope.showInfo.id;
@@ -159,7 +157,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
       }
     }
 
-    $scope.unSubscribeFromSeries = function(showId) {
+    $scope.unSubscribeFromSeries = function (showId) {
       var series = seriesService.getSeriesFromSession();
       console.log(series)
       var index = $scope.getSeriesIndex(series, showId);
@@ -170,9 +168,9 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
       seriesService.setSeriesToSession(series);
     }
 
-    $scope.getSeriesIndex = function(series, showId) {
+    $scope.getSeriesIndex = function (series, showId) {
       console.log(showId)
-      for (var i = 0; i< series.length; i++) {
+      for (var i = 0; i < series.length; i++) {
         if (series[i].showId == showId) {
           return i;
         }
@@ -181,9 +179,6 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
     }
 
     $scope.seriesService = seriesService;
-
-
-
 
 
     $scope.subscribeToSeries = function (data) {
@@ -197,7 +192,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
     function parseSeasons(input_seasons) {
       var episodes = [];
       var seasons = [];
-      for (var i = 0; i < input_seasons.length; i++) {
+      for (var i = 1; i < input_seasons.length; i++) {
         episodes = [];
         for (var k = 0; k < input_seasons[i].episode_count; k++) {
           episodes.push({nr: k, watched: false});
@@ -209,7 +204,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
 
   })
 
-  .controller('singleSubscribedCtrl', function ($scope, seriesService, $stateParams, sessionStorage) {
+  .controller('singleSubscribedCtrl', function ($scope, seriesService, $stateParams, sessionStorage, $http) {
     $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
       viewData.enableBack = true;
     });
@@ -219,20 +214,64 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
     $scope.show = series[seriesIndex];
 
     function generateSmartInfoAboutSeries() {
+      $scope.subscriptionText = "";
+      $scope.newestEpisodeText = "";
       if (checkIfLastSeasonIsWatched()) {
         getInfoAboutNewSeason();
       }
-      return "not smart yet!";
+      getHowManyEpisodesToWatch();
 
+    }
+
+    function getHowManyEpisodesToWatch() {
+      var sumOfEpisodesToWatch = 0;
+      var sumOfAllEpisodes = 0;
+      var seasons = $scope.show.seasons;
+      for (var seasonvar = 0; seasonvar < seasons.length; seasonvar++) {
+        for (var episodevar = 0; episodevar < parseInt(seasons[seasonvar].length); episodevar++) {
+          if (seasons[seasonvar][episodevar].watched) {
+            sumOfEpisodesToWatch++;
+          }
+          sumOfAllEpisodes++;
+        }
+      }
+      printMessageToScope(sumOfEpisodesToWatch, sumOfAllEpisodes);
+    }
+    function printMessageToScope(sumOfEpisodesToWatch, sumOfAllEpisodes) {
+      $scope.subscriptionText = " you have watched " + sumOfEpisodesToWatch + " out of " + sumOfAllEpisodes +" episodes";
     }
 
     function getInfoAboutNewSeason() {
+      var someSmartInfo = "";
+      $http({
+        method: 'GET',
+        url: "http://api.themoviedb.org/3/tv/" + showId + "?api_key=20907b42632c8a948bea26d333d3244e"
+      }).then(function successCallback(response) {
+        someSmartInfo = response.data.last_air_date;
+        if (someSmartInfo != "") {
 
+          var date = Date.now();
+          var mydate = new Date(someSmartInfo);
+          if (date < mydate) {
+            $scope.newestEpisodeText = " You have watched all the episodes in the last season - \n New episode at: \n" + someSmartInfo;
+          }
+        }
+      }, function errorCallback(response) {
+        console.log(response);
+      });
     }
 
+    $scope.toggleGroup = function (group) {
+      group.show = !group.show;
+    };
+    $scope.isGroupShown = function (group) {
+      return group.show;
+    };
+
     function checkIfLastSeasonIsWatched() {
-      var seasons =  $scope.show.seasons;
-      var lastSeasonIndex = seasons.length-1;
+      var seasons = $scope.show.seasons;
+      var lastSeasonIndex = seasons.length - 1;
+      if (seasons.length == 0) return false;
       for (var i = 0; i < seasons[lastSeasonIndex].length; i++) {
         if (seasons[lastSeasonIndex][i].watched == false) {
           return false;
@@ -241,20 +280,21 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
       return true;
     }
 
-    $scope.subscriptionText = generateSmartInfoAboutSeries();
+    generateSmartInfoAboutSeries();
 
 
     function getSeriesIndex(showId, series) {
       for (var i = 0; i < series.length; i++) {
-        if (series[i].showId == showId){
+        if (series[i].showId == showId) {
           return i;
         }
       }
       sessionStorage.redirect('page2/myseries')
     }
+
     $scope.seriesService = seriesService;
 
-    $scope.watched = function(showIndex, seasonIndex) {
+    $scope.watched = function (showIndex, seasonIndex) {
 
       console.log($scope.show.seasons[seasonIndex][showIndex].watched)
       if (series[seriesIndex].seasons[seasonIndex][showIndex].watched == true) {
@@ -266,6 +306,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
       }
       seriesService.setSeriesToSession(series);
       seriesService.updateSeries(showId);
+      generateSmartInfoAboutSeries();
     }
 
   })

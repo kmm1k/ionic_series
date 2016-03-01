@@ -8,6 +8,7 @@ js/services.js
 js/routes.js
 js/session.js
 lib/ionic/css/ionic.css
+lib/ionic/css/custom.css
 lib/ionic/css/ionic.min.css
 lib/ionic/fonts/ionicons.eot
 lib/ionic/fonts/ionicons.svg

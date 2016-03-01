@@ -29,6 +29,7 @@ angular.module('app.services', [])
         removeSession: function () {
           delete $localStorage.name;
           delete $localStorage.id;
+          delete $localStorage.series;
         },
         isSession: function () {
           if ($localStorage.id != undefined) {

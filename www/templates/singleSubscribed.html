@@ -1,22 +1,39 @@
-<ion-view title="Single subscribed">
+<ion-view cache-view="false" title="Single subscribed">
   <ion-content ng-controller="singleSubscribedCtrl" overflow-scroll="true" padding="true" scroll="true"
                class="has-header">
     <h1>{{show.title}}</h1>
     <img src="https://image.tmdb.org/t/p/w500{{show.backPath}}" width="100%">
 
     <p>{{show.overview}}</p>
-    <a  href="#/single/{{show.showId}}" ng-show="seriesService.checkIfSubscribed(show.showId)" class="button button-stable button-block button-positive"  nav-clear menu-close >
+    <a href="#/single/{{show.showId}}" ng-show="seriesService.checkIfSubscribed(show.showId)"
+       class="button button-stable button-block button-positive" nav-clear menu-close>
       Full description here.
     </a>
-    <h3>{{subscriptionText}}</h3>
+
+    <p>{{subscriptionText}}</p>
+    <p>{{newestEpisodeText}}</p>
 
     <div ng-repeat="season in show.seasons" class="list card" ng-init="outerIndex = $index">
-      <div class="item item-divider">Season {{outerIndex+1}}</div>
+
+      <div class="item item-divider">
+
+        <ion-item class="item-stable"
+                  ng-click="toggleGroup(season)"
+                  ng-class="{active: isGroupShown(season)}">
+          <i class="icon" ng-class="isGroupShown(season) ? 'ion-minus' : 'ion-plus'"></i>
+          &nbsp;
+          Season {{outerIndex+1}}
+        </ion-item>
+
+      </div>
       <div class="item item-body">
+
         <ion-list>
-          <ion-checkbox ng-repeat="episode in season" ng-init="innerIndex = $index"
+          <ion-checkbox class="item-accordion" ng-repeat="episode in season" ng-init="innerIndex = $index"
                         ng-model="show.seasons[outerIndex][innerIndex].watched"
-                        ng-click="watched(innerIndex, outerIndex)">Episode {{innerIndex+1}}
+                        ng-click="watched(innerIndex, outerIndex)" ng-show="isGroupShown(season)">
+
+            Episode {{innerIndex+1}}
           </ion-checkbox>
         </ion-list>
       </div>
